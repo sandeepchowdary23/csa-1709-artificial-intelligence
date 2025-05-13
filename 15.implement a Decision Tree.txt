@@ -1,0 +1,75 @@
+import math
+from collections import Counter
+
+# Sample dataset: [Outlook, Temperature, Humidity, Wind, PlayTennis]
+# Each entry is a record
+dataset = [
+    ['Sunny', 'Hot', 'High', 'Weak', 'No'],
+    ['Sunny', 'Hot', 'High', 'Strong', 'No'],
+    ['Overcast', 'Hot', 'High', 'Weak', 'Yes'],
+    ['Rain', 'Mild', 'High', 'Weak', 'Yes'],
+    ['Rain', 'Cool', 'Normal', 'Weak', 'Yes'],
+    ['Rain', 'Cool', 'Normal', 'Strong', 'No'],
+    ['Overcast', 'Cool', 'Normal', 'Strong', 'Yes'],
+    ['Sunny', 'Mild', 'High', 'Weak', 'No'],
+    ['Sunny', 'Cool', 'Normal', 'Weak', 'Yes'],
+    ['Rain', 'Mild', 'Normal', 'Weak', 'Yes'],
+    ['Sunny', 'Mild', 'Normal', 'Strong', 'Yes'],
+    ['Overcast', 'Mild', 'High', 'Strong', 'Yes'],
+    ['Overcast', 'Hot', 'Normal', 'Weak', 'Yes'],
+    ['Rain', 'Mild', 'High', 'Strong', 'No']
+]
+
+# List of feature names
+features = ['Outlook', 'Temperature', 'Humidity', 'Wind']
+
+# Function to calculate entropy
+def entropy(data):
+    labels = [row[-1] for row in data]
+    label_counts = Counter(labels)
+    total = len(data)
+    return -sum((count / total) * math.log2(count / total) for count in label_counts.values())
+
+# Function to split data by a feature
+def split_data(data, feature_index, value):
+    return [row for row in data if row[feature_index] == value]
+
+# Function to calculate information gain
+def info_gain(data, feature_index):
+    total_entropy = entropy(data)
+    values = set(row[feature_index] for row in data)
+    weighted_entropy = 0
+    for val in values:
+        subset = split_data(data, feature_index, val)
+        weighted_entropy += (len(subset) / len(data)) * entropy(subset)
+    return total_entropy - weighted_entropy
+
+# ID3 algorithm to build the tree
+def build_tree(data, feature_names):
+    labels = [row[-1] for row in data]
+    if labels.count(labels[0]) == len(labels):
+        return labels[0]  # All same label
+    if not feature_names:
+        return Counter(labels).most_common(1)[0][0]  # Majority vote
+
+    # Choose best feature
+    gains = [info_gain(data, i) for i in range(len(feature_names))]
+    best_index = gains.index(max(gains))
+    best_feature = feature_names[best_index]
+
+    tree = {best_feature: {}}
+    values = set(row[best_index] for row in data)
+
+    for val in values:
+        subset = split_data(data, best_index, val)
+        new_features = feature_names[:best_index] + feature_names[best_index+1:]
+        new_subset = [row[:best_index] + row[best_index+1:] for row in subset]
+        subtree = build_tree(new_subset, new_features)
+        tree[best_feature][val] = subtree
+
+    return tree
+
+# Build and print the decision tree
+decision_tree = build_tree(dataset, features)
+print("Decision Tree:")
+print(decision_tree)

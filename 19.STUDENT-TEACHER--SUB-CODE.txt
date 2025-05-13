@@ -1,0 +1,19 @@
+% Database of student-teacher-subject relationships
+% Format: student(StudentName, SubjectCode, TeacherName)
+
+student('John', 'CS101', 'Dr. Smith').
+student('Alice', 'CS102', 'Prof. Johnson').
+student('Bob', 'CS101', 'Dr. Smith').
+student('Charlie', 'CS103', 'Dr. White').
+
+% Rule to find the teacher of a student for a specific subject
+teacher_of(StudentName, SubjectCode, TeacherName) :-
+    student(StudentName, SubjectCode, TeacherName).
+
+% Rule to find all students in a specific subject
+students_in_subject(SubjectCode, StudentName) :-
+    student(StudentName, SubjectCode, _).
+
+% Rule to find all subjects a teacher is teaching
+subjects_taught_by(TeacherName, SubjectCode) :-
+    student(_, SubjectCode, TeacherName).

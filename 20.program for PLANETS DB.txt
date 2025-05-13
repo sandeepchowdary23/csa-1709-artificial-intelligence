@@ -1,0 +1,32 @@
+% Database of planets and their characteristics
+% Format: planet(Name, Type, Diameter, DistanceFromSun, Moons)
+
+% Planet data: name, type (terrestrial/gas giant), diameter (km), distance from the sun (million km), number of moons
+planet('Mercury', 'terrestrial', 4879, 57.9, 0).
+planet('Venus', 'terrestrial', 12104, 108.2, 0).
+planet('Earth', 'terrestrial', 12742, 149.6, 1).
+planet('Mars', 'terrestrial', 6779, 227.9, 2).
+planet('Jupiter', 'gas giant', 139820, 778.6, 79).
+planet('Saturn', 'gas giant', 116460, 1434, 82).
+planet('Uranus', 'gas giant', 50724, 2871, 27).
+planet('Neptune', 'gas giant', 49244, 4497.1, 14).
+
+% Rule to find a planet's type
+planet_type(Name, Type) :-
+    planet(Name, Type, _, _, _).
+
+% Rule to find a planet's diameter
+planet_diameter(Name, Diameter) :-
+    planet(Name, _, Diameter, _, _).
+
+% Rule to find a planet's distance from the sun
+planet_distance(Name, Distance) :-
+    planet(Name, _, _, Distance, _).
+
+% Rule to find a planet's moons
+planet_moons(Name, Moons) :-
+    planet(Name, _, _, _, Moons).
+
+% Rule to find all planets of a specific type (terrestrial or gas giant)
+planets_by_type(Type, Name) :-
+    planet(Name, Type, _, _, _).

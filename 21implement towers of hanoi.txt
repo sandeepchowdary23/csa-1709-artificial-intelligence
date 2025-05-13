@@ -1,0 +1,11 @@
+% Base case: Moving 1 disk from the source peg to the destination peg
+move(1, Source, Destination, _) :-
+    write('Move disk from '), write(Source), write(' to '), write(Destination), nl.
+
+% Recursive case: Move N disks from Source to Destination using Auxiliary peg
+move(N, Source, Destination, Auxiliary) :-
+    N > 1,                          % Ensure there are more than 1 disk
+    M is N - 1,                      % Sub-problem: Move N-1 disks
+    move(M, Source, Auxiliary, Destination), % Move N-1 disks to Auxiliary peg
+    move(1, Source, Destination, _),         % Move the largest disk to Destination
+    move(M, Auxiliary, Destination, Source). % Move N-1 disks from Auxiliary to Destination

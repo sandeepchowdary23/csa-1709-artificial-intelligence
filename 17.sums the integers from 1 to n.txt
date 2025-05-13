@@ -1,0 +1,9 @@
+% Base case: the sum of integers from 1 to 1 is 1
+sum(1, 1).
+
+% Recursive case: sum of integers from 1 to N is N + sum of integers from 1 to N-1
+sum(N, Result) :-
+    N > 1, % Ensure that N is greater than 1
+    N1 is N - 1, % Decrement N
+    sum(N1, PartialSum), % Recursively sum the first N-1 integers
+    Result is N + PartialSum. % Add N to the partial sum
