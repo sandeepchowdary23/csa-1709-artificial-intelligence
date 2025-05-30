@@ -1,0 +1,49 @@
+% Facts: gender
+male(john).
+male(paul).
+male(mike).
+male(sam).
+male(david).
+
+female(lisa).
+female(mary).
+female(susan).
+female(kate).
+female(anna).
+
+% Facts: parent relationships
+parent(john, paul).     % john is parent of paul
+parent(lisa, paul).     % lisa is parent of paul
+parent(john, mary).
+parent(lisa, mary).
+
+parent(paul, mike).
+parent(susan, mike).
+
+parent(paul, kate).
+parent(susan, kate).
+
+parent(mary, sam).
+parent(david, sam).
+
+parent(mary, anna).
+parent(david, anna).
+
+% Rules
+father(X, Y) :- parent(X, Y), male(X).
+mother(X, Y) :- parent(X, Y), female(X).
+
+child(X, Y) :- parent(Y, X).
+
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
+
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+grandfather(X, Y) :- grandparent(X, Y), male(X).
+grandmother(X, Y) :- grandparent(X, Y), female(X).
+
+uncle(X, Y) :- male(X), sibling(X, Z), parent(Z, Y).
+aunt(X, Y) :- female(X), sibling(X, Z), parent(Z, Y).
+
+% Sample rule to list all descendants
+descendant(X, Y) :- parent(Y, X).
+descendant(X, Y) :- parent(Y, Z), descendant(X, Z).
