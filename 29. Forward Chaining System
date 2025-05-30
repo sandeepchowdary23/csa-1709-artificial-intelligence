@@ -1,0 +1,51 @@
+% Dynamic predicates to allow updating during execution
+:- dynamic fact/1.
+
+% Sample initial facts (can be asserted dynamically or preloaded)
+fact(rainy).
+fact(cloudy).
+
+% Rules: If conditions are met, then the conclusion can be inferred
+rule(wet_ground, [rainy]).
+rule(cold_weather, [cloudy, windy]).
+rule(close_windows, [rainy, windy]).
+rule(take_umbrella, [rainy]).
+
+% Forward chaining engine
+forward :-
+    findall(NewFact, (
+        rule(NewFact, Conditions),
+        \+ fact(NewFact),
+        all_conditions_met(Conditions)
+    ), NewFacts),
+    add_new_facts(NewFacts),
+    (NewFacts \= [] -> forward ; true).  % Continue if new facts were added
+
+% Helper: Check all conditions are known facts
+all_conditions_met([]).
+all_conditions_met([H|T]) :-
+    fact(H),
+    all_conditions_met(T).
+
+% Helper: Add all new inferred facts
+add_new_facts([]).
+add_new_facts([H|T]) :-
+    \+ fact(H),
+    assertz(fact(H)),
+    write('Inferred: '), write(H), nl,
+    add_new_facts(T).
+add_new_facts([H|T]) :-
+    fact(H),
+    add_new_facts(T).
+
+% Run the system and show all final facts
+run :-
+    write('Initial Facts: '), nl,
+    list_facts,
+    forward,
+    write('Final Facts After Forward Chaining:'), nl,
+    list_facts.
+
+% Display all known facts
+list_facts :-
+    forall(fact(F), (write('- '), write(F), nl)).
