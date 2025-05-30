@@ -1,0 +1,34 @@
+% Base facts
+fact(rainy).
+fact(cloudy).
+fact(windy).
+
+% Rules: rule(Conclusion, [Conditions])
+rule(wet_ground, [rainy]).
+rule(take_umbrella, [rainy]).
+rule(cold_weather, [cloudy, windy]).
+rule(close_windows, [rainy, windy]).
+
+% Backward chaining engine
+prove(Goal) :-
+    fact(Goal),
+    write('Proved directly from fact: '), write(Goal), nl.
+
+prove(Goal) :-
+    rule(Goal, Conditions),
+    prove_all(Conditions),
+    write('Proved by rule: '), write(Goal), nl.
+
+% Helper: prove all conditions in a list
+prove_all([]).
+prove_all([H|T]) :-
+    prove(H),
+    prove_all(T).
+
+% Interface to run queries
+ask(Goal) :-
+    ( prove(Goal) ->
+        format('YES, "~w" is true.~n', [Goal])
+    ;
+        format('NO, "~w" could not be proven.~n', [Goal])
+    ).
