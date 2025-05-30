@@ -1,0 +1,22 @@
+% Diseases
+disease(diabetes).
+disease(hypertension).
+disease(obesity).
+disease(anemia).
+disease(high_cholesterol).
+
+% Diet suggestions for each disease
+diet(diabetes, [whole_grains, vegetables, lean_meat, nuts, low_sugar_fruits]).
+diet(hypertension, [low_sodium_foods, fruits, vegetables, whole_grains, low_fat_dairy]).
+diet(obesity, [high_fiber_foods, vegetables, fruits, lean_protein, water]).
+diet(anemia, [iron_rich_foods, red_meat, leafy_greens, legumes, vitamin_c_rich_fruits]).
+diet(high_cholesterol, [oats, nuts, olive_oil, fish, fruits, vegetables]).
+
+% Rule to suggest a diet based on disease
+suggest_diet(Disease, Diet) :-
+    disease(Disease),
+    diet(Disease, Diet).
+
+% Fallback if disease not recognized
+suggest_diet(Disease, 'No data available for the specified disease.') :-
+    \+ disease(Disease).
