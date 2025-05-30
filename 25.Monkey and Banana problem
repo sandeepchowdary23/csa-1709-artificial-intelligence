@@ -1,0 +1,33 @@
+% State representation:
+% state(MonkeyPosition, MonkeyHasBox, MonkeyOnBox, HasBanana)
+
+% Initial state: Monkey at door, box at window, monkey not on box, no banana
+initial_state(state(at_door, at_window, on_floor, no)).
+
+% Goal state: monkey has banana
+goal_state(state(_, _, _, yes)).
+
+% Move: monkey can walk from one position to another
+move(state(MP, Box, on_floor, no), walk(MP, NewPos), state(NewPos, Box, on_floor, no)) :-
+    MP \= NewPos.
+
+% Push: monkey can push box from one place to another (only if monkey is on floor and at same position as box)
+move(state(Pos, Pos, on_floor, no), push(Pos, NewPos), state(NewPos, NewPos, on_floor, no)) :-
+    Pos \= NewPos.
+
+% Climb: monkey can climb on the box if it is at the same position and on the floor
+move(state(Pos, Pos, on_floor, no), climb, state(Pos, Pos, on_box, no)).
+
+% Grab banana: only possible if monkey is on box at center
+move(state(at_center, at_center, on_box, no), grab, state(at_center, at_center, on_box, yes)).
+
+% Recursive rule to find a sequence of moves from a state to the goal
+solve(State, []) :- goal_state(State).
+solve(State, [Move | Rest]) :-
+    move(State, Move, NewState),
+    solve(NewState, Rest).
+
+% Entry point to solve the problem from initial state
+solve_problem(Steps) :-
+    initial_state(State),
+    solve(State, Steps).
