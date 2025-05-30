@@ -1,0 +1,46 @@
+% Define edges (Graph)
+edge(a, b).
+edge(a, c).
+edge(b, d).
+edge(b, e).
+edge(c, f).
+edge(e, g).
+edge(f, g).
+
+% Heuristic values (estimated cost to reach goal)
+heuristic(a, 6).
+heuristic(b, 4).
+heuristic(c, 5).
+heuristic(d, 3).
+heuristic(e, 2).
+heuristic(f, 4).
+heuristic(g, 0).  % Goal node
+
+% Best-First Search main function
+best_first_search(Start, Goal, Path) :-
+    bestfs([[Start]], Goal, RevPath),
+    reverse(RevPath, Path).
+
+% Base case: current path starts with goal
+bestfs([[Goal|RestPath]|_], Goal, [Goal|RestPath]).
+
+% Recursive case: expand the best path
+bestfs([CurrentPath|OtherPaths], Goal, FinalPath) :-
+    CurrentPath = [CurrentNode|_],
+    findall([NextNode|CurrentPath],
+            (edge(CurrentNode, NextNode),
+             \+ member(NextNode, CurrentPath)),
+            NewPaths),
+    append(OtherPaths, NewPaths, AllPaths),
+    sort_paths(AllPaths, SortedPaths),
+    bestfs(SortedPaths, Goal, FinalPath).
+
+% Sort paths based on heuristic of the head (first node of each path)
+sort_paths(Paths, Sorted) :-
+    map_list_to_pairs(path_heuristic, Paths, Pairs),
+    keysort(Pairs, SortedPairs),
+    pairs_values(SortedPairs, Sorted).
+
+% Get heuristic of the head node of a path
+path_heuristic([Node|_], H) :-
+    heuristic(Node, H).
