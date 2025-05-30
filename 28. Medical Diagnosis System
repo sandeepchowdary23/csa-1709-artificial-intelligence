@@ -1,0 +1,88 @@
+% Medical Diagnosis Knowledge Base
+
+% Rules for diseases based on symptoms
+disease(flu) :-
+    symptom(fever),
+    symptom(cough),
+    symptom(sore_throat),
+    symptom(runny_nose).
+
+disease(cold) :-
+    symptom(runny_nose),
+    symptom(sneezing),
+    symptom(cough).
+
+disease(covid19) :-
+    symptom(fever),
+    symptom(cough),
+    symptom(loss_of_taste),
+    symptom(breathing_difficulty).
+
+disease(malaria) :-
+    symptom(fever),
+    symptom(chills),
+    symptom(sweating),
+    symptom(nausea).
+
+disease(typhoid) :-
+    symptom(fever),
+    symptom(headache),
+    symptom(abdominal_pain),
+    symptom(weakness).
+
+disease(allergy) :-
+    symptom(sneezing),
+    symptom(runny_nose),
+    symptom(itchy_eyes).
+
+% Ask the user for symptoms dynamically
+ask_symptoms :-
+    write('Do you have fever? (yes/no): '), read(Fever), nl,
+    (Fever == yes -> assert(symptom(fever)) ; true),
+
+    write('Do you have cough? (yes/no): '), read(Cough), nl,
+    (Cough == yes -> assert(symptom(cough)) ; true),
+
+    write('Do you have sore throat? (yes/no): '), read(SoreThroat), nl,
+    (SoreThroat == yes -> assert(symptom(sore_throat)) ; true),
+
+    write('Do you have runny nose? (yes/no): '), read(RunnyNose), nl,
+    (RunnyNose == yes -> assert(symptom(runny_nose)) ; true),
+
+    write('Do you have sneezing? (yes/no): '), read(Sneezing), nl,
+    (Sneezing == yes -> assert(symptom(sneezing)) ; true),
+
+    write('Do you have chills? (yes/no): '), read(Chills), nl,
+    (Chills == yes -> assert(symptom(chills)) ; true),
+
+    write('Do you have sweating? (yes/no): '), read(Sweating), nl,
+    (Sweating == yes -> assert(symptom(sweating)) ; true),
+
+    write('Do you have nausea? (yes/no): '), read(Nausea), nl,
+    (Nausea == yes -> assert(symptom(nausea)) ; true),
+
+    write('Do you have breathing difficulty? (yes/no): '), read(Breath), nl,
+    (Breath == yes -> assert(symptom(breathing_difficulty)) ; true),
+
+    write('Do you have loss of taste or smell? (yes/no): '), read(LossTaste), nl,
+    (LossTaste == yes -> assert(symptom(loss_of_taste)) ; true),
+
+    write('Do you have headache? (yes/no): '), read(Headache), nl,
+    (Headache == yes -> assert(symptom(headache)) ; true),
+
+    write('Do you have abdominal pain? (yes/no): '), read(AbPain), nl,
+    (AbPain == yes -> assert(symptom(abdominal_pain)) ; true),
+
+    write('Do you feel weak? (yes/no): '), read(Weakness), nl,
+    (Weakness == yes -> assert(symptom(weakness)) ; true),
+
+    write('Do you have itchy eyes? (yes/no): '), read(ItchyEyes), nl,
+    (ItchyEyes == yes -> assert(symptom(itchy_eyes)) ; true).
+
+% Run the diagnosis
+diagnose :-
+    retractall(symptom(_)),
+    ask_symptoms,
+    (disease(D) ->
+        format('Based on your symptoms, you may have ~w.~n', [D]) ;
+        write('Sorry, no diagnosis could be determined based on given symptoms.'), nl).
