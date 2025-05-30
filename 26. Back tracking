@@ -1,0 +1,14 @@
+% Define fruits and their colors
+fruit(apple, red).
+fruit(banana, yellow).
+fruit(grape, purple).
+fruit(orange, orange).
+fruit(kiwi, green).
+fruit(blueberry, blue).
+fruit(lemon, yellow).
+fruit(strawberry, red).
+
+% Query examples:
+% ?- fruit(Fruit, Color).       % Lists all fruits and their colors via backtracking
+% ?- fruit(Fruit, red).         % Finds all fruits that are red
+% ?- fruit(apple, Color).       % Finds the color of the apple
